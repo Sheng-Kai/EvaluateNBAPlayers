@@ -45,12 +45,11 @@ write.csv(schDataframe, "NBADATA_Schedule_2015.csv", row.names = FALSE)
 
 
 
-# data <- read.csv("NBADATA_Schedule_2015.csv", stringsAsFactors = FALSE)
-# 
-# data <- data[, -c(3)]
-# 
-# temp <- data %>%
-#     full_join(data, by = "gameDate")
-# 
-# result <- table(temp[,-1])
-# 
+Sch_ATL2015 <- schDataframe %>% 
+    filter(chosenTeam == "ATL")
+
+Sch_ATL2015$LastGame <- c(min(Sch_ATL2015$gameDate)-3, Sch_ATL2015$gameDate[-82])
+Sch_ATL2015$RestDays <- difftime(Sch_ATL2015$gameDate, Sch_ATL2015$LastGame, units = "day")
+
+
+

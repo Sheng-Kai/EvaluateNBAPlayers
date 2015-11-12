@@ -139,7 +139,7 @@ scrapeNBAgbg <- function(start, end){
 UpdateToDb <- function(db, tablename){
     binary.db.exist <- dbExistsTable(db$con, tablename)
     # end <- gsub("-", "", as.character(Sys.Date() - 2))
-    end <- as.character(Sys.Date() - 2)    
+    end <- as.character(Sys.Date() - 1)    
 
     if(binary.db.exist){
         box <- tbl(db, tblname)

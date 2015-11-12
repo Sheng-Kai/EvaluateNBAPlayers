@@ -1,7 +1,7 @@
 library(dplyr)
 library(ggplot2)
 
-data <- read.csv("NBADATA_gbg_Dirty_2014.csv", stringsAsFactors = FALSE)
+data <- read.csv("~/NBADATA_gbg_Dirty_2014.csv", stringsAsFactors = FALSE)
 
 #  Seperate FGM-A/ 3PM-A/ FTM-A
 data$PlayerPosition <- substr(data$Player, regexpr(",", data$Player) + 2, nchar(data$Player))

@@ -11,14 +11,22 @@ for(i in 1:13){
     
     url <- paste0("http://basketball.fantasysports.yahoo.com/nba/draftanalysis?tab=AD&pos=ALL&sort=DA_AP&count=", (i-1)*50)
 
+   #  url <- paste0("http://basketball.fantasysports.yahoo.com/nba/draftanalysis?tab=AD&pos=ALL&sort=DA_AP&count=", 0)
+    
     pageSource.Fantasy <- readLines(url)
-    indexPlayer <- grep('target=\"sports\">', pageSource.Fantasy)
+    
+    # indexPlayer <- grep('target=\"sports\">', pageSource.Fantasy)
+    indexPlayer <- grep('target="_blank">', pageSource.Fantasy)
     indexPrice <- grep('Alt Last', pageSource.Fantasy)
     
-    tempPlayer <- pageSource.Fantasy[indexPlayer]
+    tempPlayer <- pageSource.Fantasy[indexPlayer][2:(length(indexPlayer)-1)]
     
+#     playerName <- substr(tempPlayer,
+#                          regexpr('sports\">', tempPlayer) + nchar("sports\">"),
+#                          regexpr("</a> <span", tempPlayer) - 1)
+     
     playerName <- substr(tempPlayer,
-                         regexpr('sports\">', tempPlayer) + nchar("sports\">"),
+                         regexpr('target=\"_blank\">', tempPlayer) + nchar('target=\"_blank\">'),
                          regexpr("</a> <span", tempPlayer) - 1)
     
     tempPosition <- substr(tempPlayer,
@@ -28,6 +36,12 @@ for(i in 1:13){
     playerPosition <- substr(tempPosition,
                              regexpr("-", tempPosition) + 2,
                              nchar(tempPosition))
+    
+    playerTeam <- substr(tempPosition,
+                         1,
+                         regexpr("-", tempPosition) - 2)
+    playerTeam <- toupper(playerTeam)
+    
     
     temp <- pageSource.Fantasy[indexPrice][-1]
     temp <- substr(temp,
@@ -39,13 +53,14 @@ for(i in 1:13){
     
     tempResult <- data.frame(PlayerName = playerName,
                              PlayerPosition = playerPosition,
+                             PlayerTeam = playerTeam,
                              ProjValue = projValue,
                              AvgCost = avgCost)
     
     result <- rbind(result, tempResult)
 }
 
-result[, 1:4] <- apply(result[, 1:4], 2, function(x) as.character(x))
+result[, 1:5] <- apply(result[, 1:5], 2, function(x) as.character(x))
 result$ProjValue <- as.numeric(result$ProjValue)
 result$AvgCost <- as.numeric(result$AvgCost)
 
